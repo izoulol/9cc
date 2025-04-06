@@ -54,7 +54,7 @@ void expect(char op){
 
 // 次のトークンが数値の場合、トークンを１つ読み進めてその数値を返す。
 // それ以外の場合にはエラーを報告する。
-int expcet_nember(){
+int expcet_number(){
     if(token->kind != TK_NUM)
         error("数ではありません");
     int val = token->val;
