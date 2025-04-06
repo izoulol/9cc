@@ -54,7 +54,7 @@ void expect(char op){
 
 // 次のトークンが数値の場合、トークンを１つ読み進めてその数値を返す。
 // それ以外の場合にはエラーを報告する。
-int expcet_number(){
+int expect_number(){
     if(token->kind != TK_NUM)
         error("数ではありません");
     int val = token->val;
@@ -120,18 +120,18 @@ int main(int argc, char **argv){
 
     // 式のo最初は数でなければならないので、それをチェックして
     // 最初のmov命令を出力
-    printf("    mov rax, %ld\n",expect_number());
+    printf("    mov rax, %d\n",expect_number());
     
     // '+<数>'あるいは'-<数>'というトークンの並びを消費しつつ
     // アセンブリを出力
 
     while(!at_eof()){
         if(consume('+')){
-            printf("    add rax, %ld\n", expect_number());
+            printf("    add rax, %d\n", expect_number());
             continue;
         }
         expect('-');
-            printf("    sub rax, %ld\n", expect_number());        
+            printf("    sub rax, %d\n", expect_number());        
     }
 
     printf("    ret\n");
