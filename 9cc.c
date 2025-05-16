@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-test
+
 // トークンの種類
 typedef enum {
     TK_RESERVED,    //記号
