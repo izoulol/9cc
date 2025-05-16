@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+test
 // トークンの種類
 typedef enum {
     TK_RESERVED,    //記号
@@ -22,9 +22,6 @@ struct Token {
     char *str;      //トークン文字列
 };
 
-//  Input program
-char *user_input;
-
 //現在着目しているトークン
 Token *token;
 
@@ -38,19 +35,6 @@ void error(char *fmt,...){
     exit(1);
 }
 
-// reports an error location and exit.
-void error_at(char *loc, char *fmt, ...){
-    va_list ap;
-    va_start(ap, fmt);
-
-    int pos = loc - user_input;
-    fprintf(stderr, "%s\n",user_input);
-    fprintf(stderr, "%*s", pos, ""); //print pos sapces.
-    fprintf(stderr, "^ ");
-    vfprintf(stderr, fmt ,ap);
-    fprintf(stderr, "\n");
-    exit(1);
-}
 //次のトークンが期待しいる記号のときには、トークンを１つ読み進めて
 //真を返す。それ以外の場合には偽を返す。
 bool consume(char op){
@@ -64,7 +48,7 @@ bool consume(char op){
 // それ以外の場合にはエラーを報告する。
 void expect(char op){
     if(token->kind != TK_RESERVED || token->str[0] != op)
-        error_at(token->str,"'%c'ではありません",op);
+        error("'%c'ではありません",op);
     token = token->next;
 }
 
@@ -72,7 +56,7 @@ void expect(char op){
 // それ以外の場合にはエラーを報告する。
 int expect_number(){
     if(token->kind != TK_NUM)
-        error_at(token->str, "数ではありません");
+        error("数ではありません");
     int val = token->val;
     token = token->next;
     return val;
@@ -92,8 +76,7 @@ Token *new_token(TokenKind kind, Token *cur, char *str){
 }
 
 // 入力文字列pをトークナイズしてそれを返す
-Token *tokenize(){
-    char *p = user_input;
+Token *tokenize(char *p){
     Token head;
     head.next = NULL;
     Token *cur = &head;
@@ -115,7 +98,7 @@ Token *tokenize(){
             cur->val = strtol(p,&p,10);
             continue;
         }
-        error_at(p,"トークナイズできません");
+        error("トークナイズできません");
     }
     new_token(TK_EOF, cur, p);
     return head.next;
@@ -128,8 +111,7 @@ int main(int argc, char **argv){
     }
 
     // トークナイズする
-    user_input = argv[1];
-    token = tokenize();
+    token = tokenize(argv[1]);
 
     // アセンブリの前半部分を出力
     printf(".intel_syntax noprefix\n");
